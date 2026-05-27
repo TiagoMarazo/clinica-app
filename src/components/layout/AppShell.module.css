@@ -1,0 +1,204 @@
+/*
+  Layout mobile-first:
+  - Mobile (<600px): ocupa 100% da tela, navegação fixada embaixo
+  - Tablet (600–1024px): container centralizado com largura máxima
+  - Desktop (>1024px): sidebar lateral no lugar da nav inferior
+*/
+
+.shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  width: 100%;
+  background: var(--color-bg);
+}
+
+/* ── Barra superior ── */
+.topbar {
+  background: var(--color-primary);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  /* Em desktop, a topbar fica acima de tudo */
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+
+.topbarSub {
+  font-size: 11px;
+  color: var(--color-primary-muted);
+  font-weight: 500;
+  margin-bottom: 1px;
+}
+
+.topbarTitle {
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.02em;
+}
+
+.logoutBtn {
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  border-radius: 8px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  transition: background var(--transition);
+  cursor: pointer;
+}
+
+.logoutBtn:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ── Corpo: sidebar + conteúdo (só em desktop) ── */
+.body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+/* ── Conteúdo principal ── */
+.main {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  /* Espaço para a nav inferior em mobile */
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* ── Navegação inferior (mobile e tablet) ── */
+.bottomNav {
+  display: flex;
+  background: var(--color-card);
+  border-top: 1px solid var(--color-border);
+  padding: 6px 0;
+  padding-bottom: max(6px, env(safe-area-inset-bottom));
+  flex-shrink: 0;
+  position: sticky;
+  bottom: 0;
+  z-index: 30;
+}
+
+.navItem {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 6px 0;
+  color: var(--color-text-muted);
+  transition: color var(--transition);
+  position: relative;
+  text-decoration: none;
+}
+
+.navItemActive {
+  color: var(--color-primary);
+}
+
+.navLabel {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.navDot {
+  position: absolute;
+  bottom: 2px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--color-primary);
+}
+
+/* ── Sidebar (só desktop ≥ 1024px) ── */
+.sidebar {
+  display: none;
+}
+
+/* ── Breakpoint tablet: centraliza e limita largura ── */
+@media (min-width: 600px) {
+  .shell {
+    max-width: 768px;
+    margin: 0 auto;
+    box-shadow: 0 0 40px rgba(0,0,0,0.08);
+  }
+}
+
+/* ── Breakpoint desktop: sidebar lateral, nav some embaixo ── */
+@media (min-width: 1024px) {
+  .shell {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .body {
+    gap: 0;
+  }
+
+  /* Sidebar visível */
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    width: 220px;
+    flex-shrink: 0;
+    background: var(--color-card);
+    border-right: 1px solid var(--color-border);
+    padding: 20px 0;
+    gap: 4px;
+    position: sticky;
+    top: 57px; /* altura da topbar */
+    height: calc(100dvh - 57px);
+    overflow-y: auto;
+  }
+
+  .sideNavItem {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    color: var(--color-text-secondary);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 0;
+    transition: background var(--transition), color var(--transition);
+    border-left: 3px solid transparent;
+  }
+
+  .sideNavItem:hover {
+    background: var(--color-bg);
+    color: var(--color-primary);
+  }
+
+  .sideNavItemActive {
+    background: var(--color-primary-light);
+    color: var(--color-primary);
+    border-left-color: var(--color-primary);
+  }
+
+  .sideNavLabel {
+    font-size: 14px;
+  }
+
+  /* Nav inferior some em desktop */
+  .bottomNav {
+    display: none;
+  }
+
+  /* Conteúdo ocupa o resto */
+  .main {
+    padding-bottom: 0;
+  }
+}

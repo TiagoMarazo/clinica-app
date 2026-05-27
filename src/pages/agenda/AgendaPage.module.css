@@ -1,0 +1,408 @@
+.page {
+  padding: 16px 16px 100px;
+  animation: fadeUp 220ms ease forwards;
+}
+
+/* Resumo */
+.summaryRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.summaryCard {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.summaryLabel {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 4px;
+}
+
+.summaryVal {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1;
+}
+
+.summaryTime {
+  font-size: 18px;
+  color: var(--color-primary);
+}
+
+.summarySub {
+  font-size: 10px;
+  color: var(--color-text-secondary);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* Navegação de semana */
+.weekHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.weekNav {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-secondary);
+  transition: background var(--transition);
+}
+
+.weekNav:hover {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.weekLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+/* Linha de dias */
+.weekRow {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.dayBtn {
+  flex: 1;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 8px 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  cursor: pointer;
+  transition: background var(--transition), border-color var(--transition);
+}
+
+.dayBtn:hover {
+  background: var(--color-primary-light);
+  border-color: var(--color-primary-light);
+}
+
+.dayActive {
+  background: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+}
+
+.dayToday {
+  border-color: var(--color-primary);
+}
+
+.dayLabel {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+}
+
+.dayActive .dayLabel { color: var(--color-primary-muted); }
+
+.dayNum {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.dayActive .dayNum { color: #fff; }
+
+.dayDot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--color-success);
+}
+
+.dayActive .dayDot { background: var(--color-primary-muted); }
+
+/* Cabeçalho do dia */
+.dayHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.dayTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.dayCount {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+/* Lista */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Loading */
+.loadingWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 0;
+  gap: 12px;
+}
+
+.loadingSpinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 700ms linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loadingText {
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
+
+/* Card de consulta */
+.apptCard {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+  border-left-width: 3px;
+}
+
+.appt_scheduled { border-left-color: var(--color-primary); }
+.appt_done      { border-left-color: var(--color-success); }
+.appt_cancelled { border-left-color: var(--color-danger); opacity: 0.75; }
+
+.apptTime {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  min-width: 38px;
+  padding-top: 2px;
+}
+
+.apptHour {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.appt_done .apptHour     { color: var(--color-success-dark); }
+.appt_cancelled .apptHour { color: var(--color-danger); }
+
+.apptDur {
+  font-size: 10px;
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+
+.apptBar {
+  width: 2px;
+  border-radius: 2px;
+  background: var(--color-border);
+  flex-shrink: 0;
+}
+
+.apptInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.apptNameRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.apptAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.apptNameBlock {
+  min-width: 0;
+  flex: 1;
+}
+
+.apptName {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.apptNotes {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.apptFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.apptActions {
+  display: flex;
+  gap: 4px;
+}
+
+.actionBtn {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+}
+
+.actionBtn:hover {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  border-color: var(--color-primary-light);
+}
+
+.actionDanger:hover {
+  background: var(--color-danger-light);
+  color: var(--color-danger);
+  border-color: var(--color-danger-light);
+}
+
+/* FAB — sempre visível, fixo no canto */
+.fab {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(31, 111, 139, 0.35);
+  cursor: pointer;
+  transition: background var(--transition), transform var(--transition);
+  z-index: 20;
+}
+
+.fab:hover  { background: var(--color-primary-dark); }
+.fab:active { transform: scale(0.95); }
+
+/* Em telas maiores, o FAB acompanha o container */
+@media (min-width: 600px) {
+  .fab {
+    right: calc(50% - 260px);
+  }
+}
+
+/* Estado de erro de conexão */
+.errorWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 24px;
+  text-align: center;
+  gap: 10px;
+}
+
+.errorIcon {
+  width: 60px;
+  height: 60px;
+  border-radius: 20px;
+  background: var(--color-danger-light);
+  color: var(--color-danger);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.errorTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.errorDesc {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  max-width: 280px;
+}
+
+.errorDesc code {
+  font-family: monospace;
+  background: var(--color-border);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--color-text);
+}

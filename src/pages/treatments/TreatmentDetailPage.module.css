@@ -1,0 +1,359 @@
+.page {
+  padding: 16px 16px 40px;
+  animation: fadeUp 220ms ease forwards;
+}
+
+.spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 700ms linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.sectionLabel {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 12px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Paciente */
+.searchWrap { position: relative; }
+
+.searchIcon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+
+.searchInput {
+  width: 100%;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px 10px 34px;
+  font-size: 14px;
+  color: var(--color-text);
+  font-family: var(--font);
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  background: #fff;
+}
+
+.dropdown {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  margin-top: 4px;
+  background: var(--color-card);
+}
+
+.dropdownItem {
+  width: 100%;
+  padding: 10px 14px;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--color-border);
+  cursor: pointer;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+  font-family: var(--font);
+  transition: background var(--transition);
+}
+
+.dropdownItem:last-child { border-bottom: none; }
+.dropdownItem:hover { background: var(--color-primary-light); }
+
+.selectedPatient {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--color-primary-light);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+}
+
+.selectedName {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+}
+
+.clearBtn {
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 2px 6px;
+}
+
+/* Status */
+.statusRow {
+  display: flex;
+  gap: 8px;
+}
+
+.statusBtn {
+  flex: 1;
+  padding: 9px;
+  font-size: 13px;
+  font-weight: 600;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-family: var(--font);
+  color: var(--color-text-secondary);
+  transition: background var(--transition), color var(--transition);
+}
+
+.statusBtn:hover {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.statusActive {
+  background: var(--color-primary) !important;
+  color: #fff !important;
+  border-color: var(--color-primary) !important;
+}
+
+/* Progresso */
+.progressCard {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+
+.progressHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.progressTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.progressPct {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-success-dark);
+}
+
+.progressBar {
+  height: 8px;
+  background: var(--color-border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--color-success);
+  border-radius: 8px;
+  transition: width 500ms ease;
+}
+
+.progressSub {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  text-align: right;
+}
+
+/* Etapas */
+.stagesHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.stageCount {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.emptyStages {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  text-align: center;
+  padding: 16px 0;
+}
+
+.stageList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.stageItem {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  transition: opacity var(--transition);
+}
+
+.stageDone {
+  opacity: 0.6;
+}
+
+.stageTop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.checkBtn {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--color-border);
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background var(--transition), border-color var(--transition);
+  color: #fff;
+}
+
+.checkBtn:hover {
+  border-color: var(--color-success);
+}
+
+.checkDone {
+  background: var(--color-success) !important;
+  border-color: var(--color-success) !important;
+}
+
+.stageLabel {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.stageDone .stageLabel {
+  text-decoration: line-through;
+  color: var(--color-text-muted);
+}
+
+.stageActions {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.stageActionBtn {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  background: var(--color-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  transition: background var(--transition), color var(--transition);
+}
+
+.stageActionBtn:hover { background: var(--color-primary-light); color: var(--color-primary); }
+.stageActionBtn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.stageActionDelete:hover {
+  background: var(--color-danger-light) !important;
+  color: var(--color-danger) !important;
+}
+
+.stageNotesWrap { margin-top: 8px; }
+
+.stageNotesInput {
+  min-height: 60px;
+  resize: vertical;
+  font-size: 13px;
+}
+
+.stageNotePreview {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  margin-top: 4px;
+  padding-left: 32px;
+  line-height: 1.4;
+}
+
+/* Nova etapa */
+.newStageForm {
+  background: var(--color-bg);
+  border: 1px solid var(--color-primary-light);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.newStageNotes {
+  min-height: 56px;
+  resize: vertical;
+  font-size: 13px;
+}
+
+.newStageActions {
+  display: flex;
+  gap: 8px;
+}
+
+.addStageBtn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px;
+  background: none;
+  border: 1.5px dashed var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  font-family: var(--font);
+  transition: border-color var(--transition), color var(--transition);
+}
+
+.addStageBtn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}

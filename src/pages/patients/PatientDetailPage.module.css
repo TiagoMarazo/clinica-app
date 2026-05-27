@@ -1,0 +1,232 @@
+.page {
+  padding: 16px 16px 40px;
+  animation: fadeUp 220ms ease forwards;
+}
+
+.spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 700ms linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Identidade */
+.identityCard {
+  background: var(--color-primary);
+  border-radius: var(--radius-lg);
+  padding: 20px 16px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.bigAvatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.identityInfo { flex: 1; min-width: 0; }
+
+.patientName {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.02em;
+  margin-bottom: 3px;
+}
+
+.patientMeta {
+  font-size: 12px;
+  color: var(--color-primary-muted);
+  margin-top: 2px;
+}
+
+.tagRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.tag {
+  font-size: 10px;
+  font-weight: 600;
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
+/* Seção */
+.sectionLabel {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 10px;
+}
+
+/* Contato */
+.contactRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  font-size: 14px;
+  color: var(--color-text);
+  text-decoration: none;
+  border-bottom: 1px solid var(--color-border);
+}
+.contactRow:last-child { border-bottom: none; }
+.contactRow:hover { color: var(--color-primary); }
+.contactIcon { color: var(--color-primary); flex-shrink: 0; }
+
+/* Observações */
+.notes {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+/* Stats */
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.statCard {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+}
+
+.statIcon { color: var(--color-primary); }
+.statVal  { font-size: 20px; font-weight: 700; color: var(--color-text); }
+.statLabel { font-size: 10px; color: var(--color-text-muted); font-weight: 600; text-transform: uppercase; }
+
+/* Abas */
+.tabs {
+  display: flex;
+  border-bottom: 2px solid var(--color-border);
+  margin-bottom: 12px;
+}
+
+.tab {
+  flex: 1;
+  padding: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color var(--transition);
+  font-family: var(--font);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+}
+
+.tab:hover { color: var(--color-primary); }
+
+.tabActive {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+}
+
+.tabContent { margin-bottom: 16px; }
+
+.tabActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
+.empty {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  text-align: center;
+  padding: 24px 0;
+}
+
+/* Linha de consulta no histórico */
+.apptRow {
+  display: flex;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+.apptRow:last-child { border-bottom: none; }
+
+.apptDate {
+  display: flex;
+  flex-direction: column;
+  min-width: 72px;
+}
+.apptDay  { font-size: 12px; font-weight: 700; color: var(--color-text); }
+.apptTime { font-size: 11px; color: var(--color-primary); margin-top: 1px; }
+
+.apptMid { flex: 1; }
+.apptNote { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 4px; line-height: 1.4; }
+
+/* Linha de tratamento */
+.treatmentRow {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--transition);
+}
+.treatmentRow:hover { background: var(--color-primary-light); }
+
+.treatmentInfo { flex: 1; min-width: 0; }
+.treatmentTitle { font-size: 14px; font-weight: 600; color: var(--color-text); margin-bottom: 3px; }
+.treatmentMeta  { font-size: 11px; color: var(--color-text-secondary); margin-bottom: 6px; }
+
+.progressBar {
+  height: 4px;
+  background: var(--color-border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.progressFill {
+  height: 100%;
+  background: var(--color-success);
+  border-radius: 4px;
+  transition: width 400ms ease;
+}
+
+/* Zona de perigo */
+.dangerZone {
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid var(--color-border);
+}
