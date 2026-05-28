@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Eye, EyeOff, LogIn } from 'lucide-react'
 import { useAuth } from '../../contexts/AuthContext'
 import toast from 'react-hot-toast'
+import PWAInstallBanner from '../../components/ui/PWAInstallBanner'
 import styles from './Auth.module.css'
 
 export default function LoginPage() {
@@ -90,6 +91,9 @@ export default function LoginPage() {
           Primeira vez?{' '}
           <Link to="/cadastro" className={styles.link}>Criar conta da clínica</Link>
         </p>
+
+        {/* Banner de instalação PWA — aparece apenas se o app não estiver instalado */}
+        <PWAInstallBanner />
       </div>
     </div>
   )
