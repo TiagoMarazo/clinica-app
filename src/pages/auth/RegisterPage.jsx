@@ -21,8 +21,8 @@ export default function RegisterPage() {
     if (!clinicName || !email || !password || !confirm) {
       toast.error('Preencha todos os campos.'); return
     }
-    if (password.length < 6) {
-      toast.error('A senha deve ter pelo menos 6 caracteres.'); return
+    if (password.length < 8) {
+      toast.error('A senha deve ter pelo menos 8 caracteres.'); return
     }
     if (password !== confirm) {
       toast.error('As senhas não coincidem.'); return
@@ -88,7 +88,7 @@ export default function RegisterPage() {
               <input
                 className="input"
                 type={showPwd ? 'text' : 'password'}
-                placeholder="Mínimo 6 caracteres"
+                placeholder="Mínimo 8 caracteres"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 autoComplete="new-password"
