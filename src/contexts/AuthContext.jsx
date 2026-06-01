@@ -12,28 +12,37 @@ import { auth, db } from '../lib/firebase'
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
-  const [user, setUser]           = useState(null)
-  const [clinic, setClinic]       = useState(null)
-  const [loading, setLoading]     = useState(true)
+  const [user, setUser]               = useState(null)
+  const [clinic, setClinic]           = useState(null)
+  const [loading, setLoading]         = useState(true)
   const [clinicError, setClinicError] = useState(null)
+  // emailVerified separado para facilitar checagem em qualquer componente
+  const [emailVerified, setEmailVerified] = useState(false)
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         setUser(firebaseUser)
+        setEmailVerified(firebaseUser.emailVerified)
         setClinicError(null)
+
+        // Só carrega dados da clínica se o e-mail já foi verificado
+        // Evita criar documento para contas que ainda não confirmaram o e-mail
+        if (!firebaseUser.emailVerified) {
+          console.log('[Auth] E-mail não verificado — aguardando confirmação')
+          setLoading(false)
+          return
+        }
 
         try {
           const ref  = doc(db, 'clinics', firebaseUser.uid)
           const snap = await getDoc(ref)
 
           if (snap.exists()) {
-            // Documento encontrado — situação normal
             console.log('[Auth] Clínica carregada:', snap.id)
             setClinic({ id: snap.id, ...snap.data() })
           } else {
-            // Documento confirmadamente não existe (getDoc retornou sem erro)
-            // Único caso seguro para criar: sabemos com certeza que não há nada
+            // Documento não existe — cria apenas se e-mail verificado
             console.warn('[Auth] Documento da clínica não encontrado. Criando...')
             const fallback = {
               name: firebaseUser.email?.split('@')[0] || 'Minha Clínica',
@@ -48,17 +57,13 @@ export function AuthProvider({ children }) {
             console.log('[Auth] Documento da clínica criado automaticamente.')
           }
         } catch (err) {
-          // Falha de rede, regras, ou indisponibilidade do Firestore
-          // NÃO tentamos criar o documento aqui — não sabemos se ele existe
-          // Criar aqui poderia sobrescrever dados reais em caso de instabilidade
           console.error('[Auth] Erro ao carregar clínica:', err.code, err.message)
           setClinicError(err.code || 'unknown')
-          // clinic permanece null — a UI vai mostrar erro de conexão
-          // O usuário pode tentar novamente sem risco de perda de dados
         }
       } else {
         setUser(null)
         setClinic(null)
+        setEmailVerified(false)
         setClinicError(null)
       }
       setLoading(false)
@@ -75,6 +80,27 @@ export function AuthProvider({ children }) {
     const cred = await createUserWithEmailAndPassword(auth, email, password)
     const uid  = cred.user.uid
 
+    // Salva nome da clínica temporariamente no localStorage
+    // O documento no Firestore só será criado após verificação do e-mail
+    localStorage.setItem(`pendingClinicName_${uid}`, clinicName)
+
+    // Envia e-mail de verificação ANTES de qualquer outra coisa
+    try {
+      await sendEmailVerification(cred.user)
+      console.log('[Auth] E-mail de verificação enviado para:', email)
+    } catch (err) {
+      console.error('[Auth] Erro ao enviar verificação:', err.code)
+    }
+
+    return cred.user
+  }
+
+  // Chamado pela VerifyEmailPage após confirmar que o e-mail foi verificado
+  async function createClinicAfterVerification(uid, email) {
+    const clinicName = localStorage.getItem(`pendingClinicName_${uid}`)
+      || email?.split('@')[0]
+      || 'Minha Clínica'
+
     const clinicData = {
       name: clinicName,
       ownerUid: uid,
@@ -87,27 +113,29 @@ export function AuthProvider({ children }) {
     try {
       await setDoc(doc(db, 'clinics', uid), clinicData)
       setClinic({ id: uid, ...clinicData })
-      console.log('[Auth] Clínica criada no cadastro:', uid)
+      localStorage.removeItem(`pendingClinicName_${uid}`)
+      console.log('[Auth] Clínica criada após verificação:', uid)
     } catch (err) {
-      console.error('[Auth] Erro ao criar clínica no cadastro:', err.code, err.message)
+      console.error('[Auth] Erro ao criar clínica após verificação:', err.code)
+      throw err
     }
-
-    // Envia e-mail de verificação
-    try {
-      await sendEmailVerification(cred.user)
-      console.log('[Auth] E-mail de verificação enviado para:', email)
-    } catch (err) {
-      console.error('[Auth] Erro ao enviar verificação:', err.code)
-    }
-
-    return cred.user
   }
 
   async function logout() {
     await signOut(auth)
   }
 
-  const value = { user, clinic, loading, clinicError, login, register, logout }
+  const value = {
+    user,
+    clinic,
+    loading,
+    clinicError,
+    emailVerified,
+    login,
+    register,
+    logout,
+    createClinicAfterVerification,
+  }
 
   return (
     <AuthContext.Provider value={value}>

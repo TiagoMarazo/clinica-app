@@ -9,40 +9,60 @@ import styles from './Auth.module.css'
 import vStyles from './VerifyEmailPage.module.css'
 
 export default function VerifyEmailPage() {
-  const { user, logout } = useAuth()
+  const { user, logout, createClinicAfterVerification } = useAuth()
   const navigate         = useNavigate()
   const [sending, setSending]   = useState(false)
   const [checking, setChecking] = useState(false)
   const [cooldown, setCooldown] = useState(0)
 
-  // Contagem regressiva do cooldown de reenvio
+  // Cooldown de reenvio
   useEffect(() => {
     if (cooldown <= 0) return
     const t = setTimeout(() => setCooldown(c => c - 1), 1000)
     return () => clearTimeout(t)
   }, [cooldown])
 
-  // Verifica periodicamente se o usuário confirmou o e-mail
+  // Verifica automaticamente a cada 3 segundos
   useEffect(() => {
+    if (!auth.currentUser) return
+
     const interval = setInterval(async () => {
-      if (!auth.currentUser) return
-      await auth.currentUser.reload()
-      if (auth.currentUser.emailVerified) {
-        clearInterval(interval)
-        toast.success('E-mail verificado! Bem-vindo.')
-        navigate('/')
+      try {
+        await auth.currentUser.reload()
+        if (auth.currentUser.emailVerified) {
+          clearInterval(interval)
+          await handleVerificationSuccess()
+        }
+      } catch (err) {
+        console.error('Erro ao verificar e-mail:', err)
       }
-    }, 3000) // checa a cada 3 segundos
+    }, 3000)
+
     return () => clearInterval(interval)
-  }, [navigate])
+  }, [])
+
+  async function handleVerificationSuccess() {
+    try {
+      // Cria o documento da clínica agora que o e-mail foi verificado
+      await createClinicAfterVerification(
+        auth.currentUser.uid,
+        auth.currentUser.email
+      )
+      toast.success('E-mail verificado! Bem-vindo.')
+      // Força reload do auth para atualizar emailVerified no contexto
+      window.location.href = '/'
+    } catch (err) {
+      toast.error('Erro ao configurar a clínica. Tente novamente.')
+    }
+  }
 
   async function handleResend() {
     if (!auth.currentUser || cooldown > 0) return
     setSending(true)
     try {
       await sendEmailVerification(auth.currentUser)
-      toast.success('E-mail reenviado!')
-      setCooldown(60) // bloqueia reenvio por 60 segundos
+      toast.success('E-mail reenviado! Verifique sua caixa de entrada.')
+      setCooldown(60)
     } catch (err) {
       if (err.code === 'auth/too-many-requests') {
         toast.error('Muitas tentativas. Aguarde alguns minutos.')
@@ -59,10 +79,9 @@ export default function VerifyEmailPage() {
     try {
       await auth.currentUser.reload()
       if (auth.currentUser.emailVerified) {
-        toast.success('E-mail verificado! Bem-vindo.')
-        navigate('/')
+        await handleVerificationSuccess()
       } else {
-        toast.error('E-mail ainda não verificado. Verifique sua caixa de entrada.')
+        toast.error('E-mail ainda não verificado. Verifique sua caixa de entrada e spam.')
       }
     } catch {
       toast.error('Erro ao verificar. Tente novamente.')
@@ -94,15 +113,15 @@ export default function VerifyEmailPage() {
         <div className={vStyles.steps}>
           <div className={vStyles.step}>
             <span className={vStyles.stepNum}>1</span>
-            <p>Abra seu e-mail e procure a mensagem da clínica</p>
+            <p>Abra seu e-mail e procure a mensagem do Firebase</p>
           </div>
           <div className={vStyles.step}>
             <span className={vStyles.stepNum}>2</span>
-            <p>Clique no link <strong>"Verificar e-mail"</strong> dentro da mensagem</p>
+            <p>Clique no link <strong>"Verify your email address"</strong></p>
           </div>
           <div className={vStyles.step}>
             <span className={vStyles.stepNum}>3</span>
-            <p>Volte aqui — o app vai entrar automaticamente</p>
+            <p>Volte aqui — o app entrará automaticamente</p>
           </div>
         </div>
 

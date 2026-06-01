@@ -2,8 +2,6 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Eye, EyeOff, LogIn } from 'lucide-react'
 import { useAuth } from '../../contexts/AuthContext'
-import { sendEmailVerification } from 'firebase/auth'
-import { auth } from '../../lib/firebase'
 import toast from 'react-hot-toast'
 import PWAInstallBanner from '../../components/ui/PWAInstallBanner'
 import styles from './Auth.module.css'
@@ -23,17 +21,10 @@ export default function LoginPage() {
 
     setLoading(true)
     try {
-      const user = await login(email, password)
-
-      // Bloqueia login se e-mail não foi verificado
-      if (!user.emailVerified) {
-        // Reenvia o e-mail de verificação automaticamente
-        await sendEmailVerification(auth.currentUser)
-        navigate('/verificar-email')
-        return
-      }
-
-      navigate('/')
+      await login(email, password)
+      // O redirecionamento é feito pelo PrivateRoute/PublicRoute automaticamente
+      // Se e-mail não verificado → vai para /verificar-email
+      // Se verificado → vai para /
     } catch (err) {
       const msg = err.code === 'auth/invalid-credential'
         ? 'E-mail ou senha incorretos.'
@@ -89,7 +80,6 @@ export default function LoginPage() {
             </div>
           </div>
 
-          {/* Link de recuperação de senha */}
           <div style={{ textAlign: 'right', marginTop: -8 }}>
             <Link to="/recuperar-senha" className={styles.link} style={{ fontSize: 13 }}>
               Esqueci minha senha

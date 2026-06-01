@@ -11,7 +11,7 @@ import ForgotPasswordPage from './pages/auth/ForgotPasswordPage'
 import AppShell from './components/layout/AppShell'
 
 // Agenda
-import AgendaPage from './pages/agenda/AgendaPage'
+import AgendaPage          from './pages/agenda/AgendaPage'
 import AppointmentFormPage from './pages/agenda/AppointmentFormPage'
 
 // Pacientes
@@ -26,16 +26,19 @@ import TreatmentDetailPage from './pages/treatments/TreatmentDetailPage'
 // Notificações
 import NotificationsPage from './pages/notifications/NotificationsPage'
 
-// Guard — redireciona para login se não estiver autenticado
+// Rota protegida — exige login E e-mail verificado
 function PrivateRoute({ children }) {
-  const { user } = useAuth()
-  return user ? children : <Navigate to="/login" replace />
+  const { user, emailVerified } = useAuth()
+  if (!user) return <Navigate to="/login" replace />
+  if (!emailVerified) return <Navigate to="/verificar-email" replace />
+  return children
 }
 
-// Guard — redireciona para agenda se já estiver logado
+// Rota pública — redireciona para agenda se já logado e verificado
 function PublicRoute({ children }) {
-  const { user } = useAuth()
-  return !user ? children : <Navigate to="/" replace />
+  const { user, emailVerified } = useAuth()
+  if (user && emailVerified) return <Navigate to="/" replace />
+  return children
 }
 
 export default function App() {
@@ -43,27 +46,31 @@ export default function App() {
     <AuthProvider>
       <Routes>
         {/* Rotas públicas */}
-        <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
-        <Route path="/cadastro" element={<PublicRoute><RegisterPage /></PublicRoute>} />
+        <Route path="/login"           element={<PublicRoute><LoginPage /></PublicRoute>} />
+        <Route path="/cadastro"        element={<PublicRoute><RegisterPage /></PublicRoute>} />
+        <Route path="/recuperar-senha" element={<PublicRoute><ForgotPasswordPage /></PublicRoute>} />
 
-        {/* Rotas protegidas — dentro do AppShell (com navegação) */}
+        {/* Verificação de e-mail — acessível para logados não verificados */}
+        <Route path="/verificar-email" element={<VerifyEmailPage />} />
+
+        {/* Rotas protegidas — exigem login E verificação */}
         <Route path="/" element={<PrivateRoute><AppShell /></PrivateRoute>}>
-          <Route index element={<AgendaPage />} />
-          <Route path="consulta/nova" element={<AppointmentFormPage />} />
-          <Route path="consulta/:id/editar" element={<AppointmentFormPage />} />
+          <Route index                       element={<AgendaPage />} />
+          <Route path="consulta/nova"        element={<AppointmentFormPage />} />
+          <Route path="consulta/:id/editar"  element={<AppointmentFormPage />} />
 
-          <Route path="pacientes" element={<PatientsPage />} />
-          <Route path="pacientes/novo" element={<PatientFormPage />} />
-          <Route path="pacientes/:id" element={<PatientDetailPage />} />
+          <Route path="pacientes"            element={<PatientsPage />} />
+          <Route path="pacientes/novo"       element={<PatientFormPage />} />
+          <Route path="pacientes/:id"        element={<PatientDetailPage />} />
           <Route path="pacientes/:id/editar" element={<PatientFormPage />} />
 
-          <Route path="tratamentos" element={<TreatmentsPage />} />
-          <Route path="tratamentos/:id" element={<TreatmentDetailPage />} />
+          <Route path="tratamentos"          element={<TreatmentsPage />} />
+          <Route path="tratamentos/novo"     element={<TreatmentDetailPage />} />
+          <Route path="tratamentos/:id"      element={<TreatmentDetailPage />} />
 
-          <Route path="notificacoes" element={<NotificationsPage />} />
+          <Route path="notificacoes"         element={<NotificationsPage />} />
         </Route>
 
-        {/* Qualquer rota desconhecida vai para a agenda */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </AuthProvider>
