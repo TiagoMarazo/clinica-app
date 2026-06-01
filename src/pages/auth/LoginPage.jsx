@@ -81,9 +81,14 @@ export default function LoginPage() {
           </div>
 
           <div style={{ textAlign: 'right', marginTop: -8 }}>
-            <Link to="/recuperar-senha" className={styles.link} style={{ fontSize: 13 }}>
+            <button
+              type="button"
+              className={styles.link}
+              style={{ fontSize: 13, background: 'none', border: 'none', cursor: 'pointer', padding: 0, font: 'inherit' }}
+              onClick={() => navigate('/recuperar-senha')}
+            >
               Esqueci minha senha
-            </Link>
+            </button>
           </div>
 
           <button
