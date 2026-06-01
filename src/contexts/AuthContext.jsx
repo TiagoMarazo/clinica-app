@@ -4,6 +4,7 @@ import {
   createUserWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  sendEmailVerification,
 } from 'firebase/auth'
 import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore'
 import { auth, db } from '../lib/firebase'
@@ -31,8 +32,8 @@ export function AuthProvider({ children }) {
             console.log('[Auth] Clínica carregada:', snap.id)
             setClinic({ id: snap.id, ...snap.data() })
           } else {
-            // Documento NÃO existe — pode ter falhado no cadastro
-            // Cria um documento mínimo para não bloquear o uso do app
+            // Documento confirmadamente não existe (getDoc retornou sem erro)
+            // Único caso seguro para criar: sabemos com certeza que não há nada
             console.warn('[Auth] Documento da clínica não encontrado. Criando...')
             const fallback = {
               name: firebaseUser.email?.split('@')[0] || 'Minha Clínica',
@@ -47,10 +48,13 @@ export function AuthProvider({ children }) {
             console.log('[Auth] Documento da clínica criado automaticamente.')
           }
         } catch (err) {
-          // Falha ao acessar o Firestore (regras, sem internet, etc.)
+          // Falha de rede, regras, ou indisponibilidade do Firestore
+          // NÃO tentamos criar o documento aqui — não sabemos se ele existe
+          // Criar aqui poderia sobrescrever dados reais em caso de instabilidade
           console.error('[Auth] Erro ao carregar clínica:', err.code, err.message)
           setClinicError(err.code || 'unknown')
-          // Mantém clinic como null — o app vai mostrar erro de conexão
+          // clinic permanece null — a UI vai mostrar erro de conexão
+          // O usuário pode tentar novamente sem risco de perda de dados
         }
       } else {
         setUser(null)
@@ -85,8 +89,15 @@ export function AuthProvider({ children }) {
       setClinic({ id: uid, ...clinicData })
       console.log('[Auth] Clínica criada no cadastro:', uid)
     } catch (err) {
-      // Se falhar aqui, o onAuthStateChanged vai tentar criar novamente no próximo login
       console.error('[Auth] Erro ao criar clínica no cadastro:', err.code, err.message)
+    }
+
+    // Envia e-mail de verificação
+    try {
+      await sendEmailVerification(cred.user)
+      console.log('[Auth] E-mail de verificação enviado para:', email)
+    } catch (err) {
+      console.error('[Auth] Erro ao enviar verificação:', err.code)
     }
 
     return cred.user

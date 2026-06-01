@@ -2,13 +2,15 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Eye, EyeOff, LogIn } from 'lucide-react'
 import { useAuth } from '../../contexts/AuthContext'
+import { sendEmailVerification } from 'firebase/auth'
+import { auth } from '../../lib/firebase'
 import toast from 'react-hot-toast'
 import PWAInstallBanner from '../../components/ui/PWAInstallBanner'
 import styles from './Auth.module.css'
 
 export default function LoginPage() {
   const { login } = useAuth()
-  const navigate = useNavigate()
+  const navigate  = useNavigate()
 
   const [email, setEmail]       = useState('')
   const [password, setPassword] = useState('')
@@ -18,9 +20,19 @@ export default function LoginPage() {
   async function handleSubmit(e) {
     e.preventDefault()
     if (!email || !password) { toast.error('Preencha e-mail e senha.'); return }
+
     setLoading(true)
     try {
-      await login(email, password)
+      const user = await login(email, password)
+
+      // Bloqueia login se e-mail não foi verificado
+      if (!user.emailVerified) {
+        // Reenvia o e-mail de verificação automaticamente
+        await sendEmailVerification(auth.currentUser)
+        navigate('/verificar-email')
+        return
+      }
+
       navigate('/')
     } catch (err) {
       const msg = err.code === 'auth/invalid-credential'
@@ -77,6 +89,13 @@ export default function LoginPage() {
             </div>
           </div>
 
+          {/* Link de recuperação de senha */}
+          <div style={{ textAlign: 'right', marginTop: -8 }}>
+            <Link to="/recuperar-senha" className={styles.link} style={{ fontSize: 13 }}>
+              Esqueci minha senha
+            </Link>
+          </div>
+
           <button
             type="submit"
             className="btn btn-primary btn-full"
@@ -92,7 +111,6 @@ export default function LoginPage() {
           <Link to="/cadastro" className={styles.link}>Criar conta da clínica</Link>
         </p>
 
-        {/* Banner de instalação PWA — aparece apenas se o app não estiver instalado */}
         <PWAInstallBanner />
       </div>
     </div>

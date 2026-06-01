@@ -2,8 +2,10 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 
 // Autenticação
-import LoginPage    from './pages/auth/LoginPage'
-import RegisterPage from './pages/auth/RegisterPage'
+import LoginPage          from './pages/auth/LoginPage'
+import RegisterPage       from './pages/auth/RegisterPage'
+import VerifyEmailPage    from './pages/auth/VerifyEmailPage'
+import ForgotPasswordPage from './pages/auth/ForgotPasswordPage'
 
 // Layout
 import AppShell from './components/layout/AppShell'

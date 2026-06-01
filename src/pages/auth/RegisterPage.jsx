@@ -30,8 +30,8 @@ export default function RegisterPage() {
     setLoading(true)
     try {
       await register(email, password, clinicName)
-      toast.success('Conta criada com sucesso!')
-      navigate('/')
+      toast.success('Conta criada! Verifique seu e-mail para continuar.')
+      navigate('/verificar-email')
     } catch (err) {
       const msg = err.code === 'auth/email-already-in-use'
         ? 'Este e-mail já está cadastrado.'
