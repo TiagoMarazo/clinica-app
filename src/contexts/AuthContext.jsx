@@ -22,20 +22,30 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
-        setUser(firebaseUser)
-        setEmailVerified(firebaseUser.emailVerified)
+        // Força reload do servidor para garantir estado real do emailVerified
+        // Sem isso, o PWA pode usar cache local e mostrar emailVerified incorreto
+        try {
+          await firebaseUser.reload()
+        } catch (err) {
+          console.warn('[Auth] Não foi possível recarregar usuário:', err.code)
+        }
+
+        // Usa currentUser após reload para garantir dados atualizados
+        const freshUser = auth.currentUser || firebaseUser
+        setUser(freshUser)
+        setEmailVerified(freshUser.emailVerified)
         setClinicError(null)
 
         // Só carrega dados da clínica se o e-mail já foi verificado
         // Evita criar documento para contas que ainda não confirmaram o e-mail
-        if (!firebaseUser.emailVerified) {
+        if (!freshUser.emailVerified) {
           console.log('[Auth] E-mail não verificado — aguardando confirmação')
           setLoading(false)
           return
         }
 
         try {
-          const ref  = doc(db, 'clinics', firebaseUser.uid)
+          const ref  = doc(db, 'clinics', freshUser.uid)
           const snap = await getDoc(ref)
 
           if (snap.exists()) {
@@ -45,15 +55,15 @@ export function AuthProvider({ children }) {
             // Documento não existe — cria apenas se e-mail verificado
             console.warn('[Auth] Documento da clínica não encontrado. Criando...')
             const fallback = {
-              name: firebaseUser.email?.split('@')[0] || 'Minha Clínica',
-              ownerUid: firebaseUser.uid,
-              email: firebaseUser.email || '',
+              name: freshUser.email?.split('@')[0] || 'Minha Clínica',
+              ownerUid: freshUser.uid,
+              email: freshUser.email || '',
               timezone: 'America/Sao_Paulo',
               createdAt: serverTimestamp(),
               updatedAt: serverTimestamp(),
             }
             await setDoc(ref, fallback)
-            setClinic({ id: firebaseUser.uid, ...fallback })
+            setClinic({ id: freshUser.uid, ...fallback })
             console.log('[Auth] Documento da clínica criado automaticamente.')
           }
         } catch (err) {
