@@ -10,6 +10,7 @@ import {
   getWeekDays,
   appointmentsForDay,
   formatTime,
+  formatNextAppointment,
   statusBadge,
   initials,
   toDate,
@@ -35,7 +36,12 @@ export default function AgendaPage() {
 
   const todayAppts = appointmentsForDay(appointments, new Date())
   const doneToday  = todayAppts.filter(a => a.status === 'done').length
-  const nextAppt   = dayAppts.find(a => a.status === 'scheduled')
+
+  // Próxima consulta futura a partir de agora — independente do dia selecionado
+  const now = new Date()
+  const nextAppt = appointments
+    .filter(a => a.status === 'scheduled' && toDate(a.dateTime) > now)
+    .sort((a, b) => toDate(a.dateTime) - toDate(b.dateTime))[0] || null
 
   const daysWithAppts = new Set(
     appointments.map(a => {
@@ -93,11 +99,11 @@ export default function AgendaPage() {
         </div>
         <div className={styles.summaryCard}>
           <span className={styles.summaryLabel}>Próxima</span>
-          <span className={`${styles.summaryVal} ${styles.summaryTime}`}>
-            {nextAppt ? formatTime(nextAppt.dateTime) : '—'}
+          <span className={`${styles.summaryVal} ${styles.summaryTime}`} style={{ fontSize: 13, lineHeight: 1.2, marginTop: 2 }}>
+            {nextAppt ? formatNextAppointment(nextAppt.dateTime) : '—'}
           </span>
           <span className={styles.summarySub}>
-            {nextAppt ? nextAppt.patientName : 'nenhuma'}
+            {nextAppt ? nextAppt.patientName : 'nenhuma agendada'}
           </span>
         </div>
       </div>

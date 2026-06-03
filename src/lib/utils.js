@@ -107,6 +107,30 @@ export function buildDateTime(date, timeStr) {
   return Timestamp.fromDate(d)
 }
 
+// Formata a próxima consulta de forma contextual
+// Hoje às 09:30 / Amanhã às 14:00 / Quinta às 10:00 / 15/06 às 08:00
+export function formatNextAppointment(value) {
+  const d = toDate(value)
+  if (!d) return null
+
+  const timeStr = format(d, 'HH:mm')
+
+  if (isToday(d))     return `Hoje às ${timeStr}`
+  if (isTomorrow(d))  return `Amanhã às ${timeStr}`
+
+  // Essa semana — mostra o dia da semana
+  const now  = new Date()
+  const diff = Math.ceil((d - now) / (1000 * 60 * 60 * 24))
+  if (diff <= 6) {
+    const dayName = format(d, 'EEE', { locale: ptBR })
+    const capitalized = dayName.charAt(0).toUpperCase() + dayName.slice(1)
+    return `${capitalized} às ${timeStr}`
+  }
+
+  // Mais longe — mostra a data
+  return `${format(d, 'dd/MM')} às ${timeStr}`
+}
+
 // Formata número de telefone para exibição: "11999999999" → "(11) 99999-9999"
 export function formatPhone(phone = '') {
   const digits = phone.replace(/\D/g, '')

@@ -317,6 +317,7 @@ export default function AppointmentFormPage() {
                 className="input"
                 type="date"
                 value={date}
+                min={formatToday()}
                 onChange={e => setDate(e.target.value)}
               />
             </div>
