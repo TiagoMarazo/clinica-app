@@ -191,14 +191,20 @@ export default function AgendaPage() {
           />
         ) : (
           dayAppts.map(appt => {
-            const { label, cls } = statusBadge(appt.status)
+            const { label, cls } = statusBadge(appt.status, appt.dateTime)
             return (
               <div
                 key={appt.id}
-                className={`${styles.apptCard} ${styles[`appt_${appt.status}`]}`}
+                className={`${styles.apptCard} ${
+                  cls === 'badge-soon'
+                    ? styles.appt_pending
+                    : styles[`appt_${appt.status}`]
+                }`}
               >
                 <div className={styles.apptTime}>
-                  <span className={styles.apptHour}>{formatTime(appt.dateTime)}</span>
+                  <span className={`${styles.apptHour} ${cls === 'badge-soon' ? styles.apptHourPending : ''}`}>
+                    {formatTime(appt.dateTime)}
+                  </span>
                   <span className={styles.apptDur}>{appt.duration}min</span>
                 </div>
 

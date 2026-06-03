@@ -194,7 +194,7 @@ export default function PatientDetailPage() {
               <p className={styles.empty}>Nenhuma consulta registrada.</p>
             ) : (
               appointments.map(appt => {
-                const { label, cls } = statusBadge(appt.status)
+                const { label, cls } = statusBadge(appt.status, appt.dateTime)
                 return (
                   <div key={appt.id} className={styles.apptRow}>
                     <div className={styles.apptDate}>

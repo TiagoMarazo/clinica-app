@@ -406,3 +406,13 @@
   font-size: 12px;
   color: var(--color-text);
 }
+
+/* Consulta pendente — data/hora passou sem atualização de status */
+.appt_pending {
+  border-left-color: var(--color-warning) !important;
+  background: var(--color-warning-light);
+}
+
+.apptHourPending {
+  color: var(--color-warning-dark) !important;
+}

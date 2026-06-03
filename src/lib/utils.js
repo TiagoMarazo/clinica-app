@@ -79,8 +79,15 @@ export function appointmentsForDay(appointments, date) {
   })
 }
 
-// Badge de status: retorna { label, className }
-export function statusBadge(status) {
+// Badge de status: retorna { label, cls }
+// Aceita dateTime opcional para detectar consultas com hora passada e não atualizadas
+export function statusBadge(status, dateTime) {
+  if (status === 'scheduled' && dateTime) {
+    const d = toDate(dateTime)
+    if (d && d < new Date()) {
+      return { label: 'Pendente', cls: 'badge-soon' }
+    }
+  }
   switch (status) {
     case 'scheduled': return { label: 'Agendada',  cls: 'badge-scheduled' }
     case 'done':      return { label: 'Realizada', cls: 'badge-done' }
