@@ -21,10 +21,24 @@ export default function LoginPage() {
 
     setLoading(true)
     try {
-      await login(email, password)
-      // O redirecionamento é feito pelo PrivateRoute/PublicRoute automaticamente
-      // Se e-mail não verificado → vai para /verificar-email
-      // Se verificado → vai para /
+      const user = await login(email, password)
+
+      // Se e-mail não verificado, avisa e redireciona para a tela de verificação
+      if (!user.emailVerified) {
+        toast('Você precisa verificar seu e-mail antes de entrar.', {
+          icon: '✉️',
+          duration: 4000,
+          style: {
+            background: '#fef9ed',
+            color: '#b37500',
+            border: '1px solid #f59e0b',
+          },
+        })
+        navigate('/verificar-email')
+        return
+      }
+
+      navigate('/')
     } catch (err) {
       const msg = err.code === 'auth/invalid-credential'
         ? 'E-mail ou senha incorretos.'
